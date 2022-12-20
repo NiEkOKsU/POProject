@@ -33,7 +33,7 @@ public enum MapDirections {
             case NORTH_WEST -> new Vector(1, -1);
             case SOUTH_WEST -> new Vector(-1, -1);
             case SOUTH_EAST -> new Vector(-1, 1);
-            case NORTH_EAST -> new Vector(1, 1;
+            case NORTH_EAST -> new Vector(1, 1);
         };
     }
 
