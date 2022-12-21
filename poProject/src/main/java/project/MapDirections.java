@@ -24,6 +24,31 @@ public enum MapDirections {
         };
     }
 
+    public MapDirections next(){
+        return switch (this) {
+            case NORTH -> MapDirections.NORTH_EAST;
+            case SOUTH -> MapDirections.SOUTH_WEST;
+            case WEST -> MapDirections.NORTH_WEST;
+            case EAST -> MapDirections.SOUTH_EAST;
+            case NORTH_EAST -> MapDirections.EAST;
+            case SOUTH_WEST -> MapDirections.WEST;
+            case NORTH_WEST -> MapDirections.NORTH;
+            case SOUTH_EAST -> MapDirections.SOUTH;
+        };
+    }
+    public MapDirections previous(){
+        return switch (this) {
+            case NORTH -> MapDirections.NORTH_WEST;
+            case SOUTH -> MapDirections.SOUTH_EAST;
+            case WEST -> MapDirections.SOUTH_WEST;
+            case EAST -> MapDirections.NORTH_EAST;
+            case NORTH_EAST -> MapDirections.NORTH;
+            case SOUTH_WEST -> MapDirections.SOUTH;
+            case NORTH_WEST -> MapDirections.WEST;
+            case SOUTH_EAST -> MapDirections.EAST;
+        };
+    }
+
     public Vector toUnitVector(){
         return switch (this) {
             case NORTH -> new Vector(0, 1);
