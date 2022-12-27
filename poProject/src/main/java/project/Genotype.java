@@ -1,5 +1,7 @@
 package project;
 
+import java.util.Arrays;
+
 public class Genotype {
     private final int numOfGenes = 6;
     public final int bornAnimalEnergy = 10;
@@ -14,27 +16,25 @@ public class Genotype {
             case 0 -> {
                 int i;
                 for(i = 0; i < numOfGenesFromParent1; i++){
-                    genes[i] = animal1.genes[i];
+                    genes[i] = animal1.getGenOnIdx(i);
                 }
                 for(i = numOfGenesFromParent1; i < numOfGenes; i++){
-                    genes[i] = animal2.genes[i];
+                    genes[i] = animal2.getGenOnIdx(i);
                 }
             }
             case 1 ->{
                 int i;
                 for(i = 0; i < numOfGenes - numOfGenesFromParent1; i++){
-                    genes[i] = animal2.genes[i];
+                    genes[i] = animal2.getGenOnIdx(i);
                 }
                 for(i = numOfGenes - numOfGenesFromParent1; i < numOfGenes; i++){
-                    genes[i] = animal1.genes[i];
+                    genes[i] = animal1.getGenOnIdx(i);
                 }
             }
         }
-        int toRem = (int)(bornAnimalEnergy * (animal1.energy/energySum));
-        animal1.energy -= toRem;
-        animal2.energy -= bornAnimalEnergy - toRem;
-        System.out.println(animal1.energy);
-        System.out.println(animal2.energy);
+        int toRem = (int)(bornAnimalEnergy * (animal1.getEnergy()/energySum));
+        animal1.setEnergy(animal1.getEnergy() - toRem);
+        animal2.setEnergy(bornAnimalEnergy - toRem);
         mutations();
     }
 
@@ -85,4 +85,16 @@ public class Genotype {
         }
     }
 
+    public void reverse(){
+        for(int i = 0; i < numOfGenes; i++){
+            genes[i] = genes[i].reverse();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Genotype{" +
+                "genes=" + Arrays.toString(genes) +
+                '}';
+    }
 }

@@ -2,24 +2,24 @@ package project;
 
 public class Earth extends AbstractWorldMap{
 
-    private final int mapWidth;
-    private final int mapHeight;
-
     public Earth(int width, int height){
-        this.mapWidth = width;
-        this.mapHeight = height;
+        super(width, height);
     }
 
     public void reachedPole(Animal animal){
-        if (animal.getPosition().y <= 0){
+        if (animal.getPosition().y < 0){
             Vector currentPosition = animal.getPosition();
-            animal.getDirection().next().next().next().next();
+            animal.setDirection(animal.getDirection().reverse());
+            animal.getGenes().reverse();
             animal.positionChanged(currentPosition, new Vector(currentPosition.x, 0));
+            animal.setPosition(new Vector(currentPosition.x, 0));
         }
-        if (animal.getPosition().y >= mapHeight){
+        if (animal.getPosition().y > mapHeight){
             Vector currentPosition = animal.getPosition();
-            animal.getDirection().next().next().next().next();
+            animal.setDirection(animal.getDirection().reverse());
+            animal.getGenes().reverse();
             animal.positionChanged(currentPosition, new Vector(currentPosition.x, mapHeight));
+            animal.setPosition(new Vector(currentPosition.x, mapHeight));
         }
     }
 
@@ -40,6 +40,7 @@ public class Earth extends AbstractWorldMap{
     @Override
     public boolean canMoveTo(Vector position) {
         //tu trzeba uwzględnić energię
+        System.out.println("xd");
         return true;
     }
 
@@ -47,16 +48,5 @@ public class Earth extends AbstractWorldMap{
     public void reachedBoundary(Animal animal) {
         aroundTheWorld(animal);
         reachedPole(animal);
-
-    }
-
-    @Override
-    public Vector findLeftBottomCorner() {
-        return new Vector(0,0);
-    }
-
-    @Override
-    public Vector findRightTopCorner() {
-        return new Vector(mapWidth, mapHeight);
     }
 }

@@ -49,6 +49,19 @@ public enum MapDirections {
         };
     }
 
+    public MapDirections reverse(){
+        return switch (this) {
+            case NORTH -> MapDirections.SOUTH;
+            case SOUTH -> MapDirections.NORTH;
+            case WEST -> MapDirections.EAST;
+            case EAST -> MapDirections.WEST;
+            case NORTH_EAST -> MapDirections.SOUTH_WEST;
+            case SOUTH_WEST -> MapDirections.NORTH_EAST;
+            case NORTH_WEST -> MapDirections.SOUTH_EAST;
+            case SOUTH_EAST -> MapDirections.NORTH_WEST;
+        };
+    }
+
     public Vector toUnitVector(){
         return switch (this) {
             case NORTH -> new Vector(0, 1);

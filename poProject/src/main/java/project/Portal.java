@@ -4,12 +4,8 @@ import java.util.HashMap;
 
 public class Portal extends AbstractWorldMap{
 
-    private final int mapWidth;
-    private final int mapHeight;
-
-    public Portal(int mapWidth, int mapHeight) {
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+    public Portal(int width, int height) {
+        super(width, height);
     }
 
     @Override
@@ -31,14 +27,5 @@ public class Portal extends AbstractWorldMap{
             animal.setPosition(potentialPosition);
         }
 
-    }
-    @Override
-    public Vector findLeftBottomCorner() {
-        return new Vector(0,0);
-    }
-
-    @Override
-    public Vector findRightTopCorner() {
-        return new Vector(mapWidth, mapHeight);
     }
 }
