@@ -7,8 +7,8 @@ public class Genotype {
     private final int maximalMutations = 20;
     public MapDirections[] genes = new MapDirections[numOfGenes];
     public Genotype(Animal animal1, Animal animal2){
-        float energySum = animal1.energy + animal2.energy;
-        int numOfGenesFromParent1 = (int)(numOfGenes * (animal1.energy/energySum));
+        float energySum = animal1.getEnergy() + animal2.getEnergy();
+        int numOfGenesFromParent1 = (int)(numOfGenes * (animal1.getEnergy()/energySum));
         int side = (int)(Math.random()*2);
         switch (side){
             case 0 -> {
