@@ -13,4 +13,7 @@ public interface IMap {
     void reachedBoundary(Animal animal);
 
     void reproduction();
+
+    void placeInitGrass(int amountOfGrass);
+    boolean eatGrass(Vector position);
 }

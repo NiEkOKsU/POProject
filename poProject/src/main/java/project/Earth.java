@@ -2,8 +2,8 @@ package project;
 
 public class Earth extends AbstractWorldMap{
 
-    public Earth(int width, int height){
-        super(width, height);
+    public Earth(int width, int height, int numOfGrass){
+        super(width, height, numOfGrass);
     }
 
     public void reachedPole(Animal animal){

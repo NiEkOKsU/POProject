@@ -86,6 +86,9 @@ public class Animal {
             position = newPosition;
         }
         direction = newDirection;
+        if (map.eatGrass(newPosition)){
+            energy += 10;
+        }
     }
     public void removeObserver(IPositionChangeObserver observer) {
         observers.remove(observer);
