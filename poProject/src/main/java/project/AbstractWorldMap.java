@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     protected final int mapWidth;
     protected final int mapHeight;
-    protected HashMap<Vector, Animal> animals;
+    protected HashMap<Vector, ArrayList<Animal>> animals;
     private List<IPositionChangeObserver> observers = new ArrayList<>();
 
     protected AbstractWorldMap(int width, int height) {
@@ -19,15 +19,33 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
 
     @Override
     public void positionChanged(Vector oldPosition, Vector newPosition){
-        Animal animal = animals.get(oldPosition);
-        animals.remove(oldPosition);
-        animals.put(newPosition, animal);
+        Animal animal = animals.get(oldPosition).get(0);
+        animals.get(oldPosition).remove(0);
+        if(!isOccupied(newPosition)){
+            ArrayList<Animal> newList = new ArrayList<>();
+            newList.add(animal);
+            animals.put(newPosition, newList);
+        }
+        else{
+            ArrayList<Animal> listt = animals.get(newPosition);
+            listt.add(animal);
+            animals.replace(newPosition, listt);
+        }
     }
 
     @Override
     public boolean place(Animal animal){
-        if (this.canMoveTo(animal.getPosition())){
-            animals.put(animal.getPosition(), animal);
+        if (!this.isOccupied(animal.getPosition()) && this.canMoveTo(animal.getPosition())){
+            ArrayList<Animal> newList = new ArrayList<>();
+            newList.add(animal);
+            animals.put(animal.getPosition(), newList);
+            animal.addObserver(this);
+            return true;
+        }
+        else if(this.canMoveTo(animal.getPosition())){
+            ArrayList<Animal> listt = animals.get(animal.getPosition());
+            listt.add(animal);
+            animals.replace(animal.getPosition(), listt);
             animal.addObserver(this);
             return true;
         }
@@ -57,29 +75,10 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     }
 
     public void reproduction(){
-        HashMap<Vector, Integer> OccupiedSectors = new HashMap<>();
         animals.forEach((key, value)->{
-            System.out.println(value);
-            if(OccupiedSectors.containsKey(key)){
-                OccupiedSectors.replace(key, OccupiedSectors.get(key) + 1);
-            }
-            else{
-                OccupiedSectors.put(key, 1);
-            }
-        });
-        OccupiedSectors.forEach((key, value)->{
-            System.out.println(value);
-            if (value >= 2){
-                Animal[] animalsOnSector = new Animal[value];
-                final int[] idx = {0};
-                animals.forEach((key2, value2) -> {
-                    if(key == key2){
-                        animalsOnSector[idx[0]] = (value2);
-                        idx[0] += 1;
-                    }
-                });
-                Arrays.sort(animalsOnSector, new SortByEnergy());
-                //animals.put(animalsOnSector[0].getPosition(), new Animal(animalsOnSector[0].getMap(), key, animalsOnSector[0], animalsOnSector[1]));
+            if (value.size() > 1){
+                value = new Reproduction(value, key).makingChildrens();
+                animals.replace(key, value);
             }
         });
     }
