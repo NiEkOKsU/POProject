@@ -16,42 +16,13 @@ public class Vector {
     }
 
     public boolean precedes(Vector other){
-        if (x <= other.x && y <= other.y){
-            return true;
-        }
-        return false;
+        return x < other.x && y < other.y;
     }
 
     public boolean follows(Vector other){
-        if (x >= other.x && y >= other.y){
-            return true;
-        }
-        return false;
+        return x > other.x && y > other.y;
     }
 
-    public Vector upperRight(Vector other){
-        if (x < other.x && y < other.y){
-            return new Vector(other.x,other.y);
-        } else if (x < other.x && y > other.y) {
-            return new Vector(other.x,y);
-        } else if (x > other.x && y < other.y){
-            return new Vector(x,other.y);
-        } else {
-            return new Vector(x,y);
-        }
-    }
-
-    public Vector lowerLeft(Vector other){
-        if (x < other.x && y < other.y){
-            return new Vector(x,y);
-        } else if (x < other.x && y > other.y) {
-            return new Vector(x,other.y);
-        } else if (x > other.x && y < other.y){
-            return new Vector(other.x,y);
-        } else {
-            return new Vector(other.x,other.y);
-        }
-    }
 
     public Vector add(Vector other){
         return new Vector(x + other.x, y + other.y);
