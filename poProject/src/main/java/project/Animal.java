@@ -12,6 +12,8 @@ public class Animal {
     private Genotype genes;
     private List<IPositionChangeObserver> observers = new ArrayList<>();
 
+    private int age;
+    private int childrens;
     public Animal(IMap map, Vector position) {
         this.direction = MapDirections.NORTH;
         this.position = position;
@@ -64,6 +66,18 @@ public class Animal {
         return map;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public int getChildrens() {
+        return childrens;
+    }
+
+    public void gettingChild() {
+        this.childrens += 1;
+    }
+
     public boolean isAt(Vector checkPosition){
         return Objects.equals(position, checkPosition);
     }
@@ -86,6 +100,7 @@ public class Animal {
             position = newPosition;
         }
         direction = newDirection;
+        age += 1;
     }
     public void removeObserver(IPositionChangeObserver observer) {
         observers.remove(observer);
@@ -97,8 +112,8 @@ public class Animal {
     @Override
     public String toString() {
         return "A{" +
-                "d=" + direction +
-                ", p=" + position +
+                "d = " + direction +
+                ", p = " + position +
                 '}';
     }
 
