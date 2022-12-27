@@ -21,9 +21,7 @@ public class RunProject {
         eagle.move(MapDirections.NORTH);
         map.reachedBoundary(eagle);
         System.out.println(map);
-        eagle.move(MapDirections.NORTH);
-        map.reachedBoundary(eagle);
-        System.out.println(map);
+
         doggo.move(MapDirections.WEST);
         map.reachedBoundary(doggo);
         System.out.println(map);
