@@ -12,4 +12,5 @@ public interface IMap {
 
     void reachedBoundary(Animal animal);
 
+    void reproduction();
 }

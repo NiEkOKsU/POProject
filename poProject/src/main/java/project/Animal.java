@@ -9,14 +9,23 @@ public class Animal {
     private Vector position;
     private int energy;
     private IMap map;
-
+    private Genotype genes;
     private List<IPositionChangeObserver> observers = new ArrayList<>();
 
     public Animal(IMap map, Vector position) {
         this.direction = MapDirections.NORTH;
         this.position = position;
-        this.energy= energy;
+        this.energy = 10;
         this.map = map;
+        this.genes = new Genotype();
+    }
+
+    public Animal(IMap map, Vector position, Animal animal1, Animal animal2) {
+        this.direction = MapDirections.NORTH;
+        this.position = position;
+        this.energy = 10;
+        this.map = map;
+        this.genes = new Genotype(animal1, animal2);
     }
 
     public Vector getPosition() {
@@ -31,8 +40,28 @@ public class Animal {
         return direction;
     }
 
+    public void setDirection(MapDirections direction) {
+        this.direction = direction;
+    }
+
     public int getEnergy(){
         return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    public MapDirections getGenOnIdx(int i){
+        return this.genes.genes[i];
+    }
+
+    public Genotype getGenes() {
+        return genes;
+    }
+
+    public IMap getMap() {
+        return map;
     }
 
     public boolean isAt(Vector checkPosition){
@@ -56,6 +85,7 @@ public class Animal {
             positionChanged(position, newPosition);
             position = newPosition;
         }
+        direction = newDirection;
     }
     public void removeObserver(IPositionChangeObserver observer) {
         observers.remove(observer);
@@ -63,6 +93,15 @@ public class Animal {
     public void addObserver(IPositionChangeObserver observer) {
         observers.add(observer);
     }
+
+    @Override
+    public String toString() {
+        return "A{" +
+                "d=" + direction +
+                ", p=" + position +
+                '}';
+    }
+
     void positionChanged(Vector oldPosition, Vector newPosition){
         for (IPositionChangeObserver observer : observers){
             observer.positionChanged(oldPosition, newPosition);
