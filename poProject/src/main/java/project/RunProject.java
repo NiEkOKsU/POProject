@@ -4,37 +4,45 @@ public class RunProject {
 
     public static void main(String[] args) {
 
-        IMap map = new Portal(5, 5, 5);
-        Animal eagle = new Animal(map, new Vector(2,2));
-        Animal doggo = new Animal(map, new Vector(2,2));
+            IMap map = new Earth(20, 20, 40);
+            Animal eagle = new Animal(map, new Vector(2,2));
+            Animal doggo = new Animal(map, new Vector(3,3));
 
-        map.place(eagle);
-        System.out.println(map);
-        map.place(doggo);
-        System.out.println(map);
-        //eagle.move(MapDirections.NORTH);
-        //map.reachedBoundary(eagle);
-        //System.out.println(map);
-        //doggo.move(MapDirections.WEST);
-        //map.reachedBoundary(doggo);
-        //System.out.println(map);
-        //map.reproduction();
-        //System.out.println(map);
-        //eagle.move(MapDirections.SOUTH);
-        //map.reachedBoundary(eagle);
-        //System.out.println(map);
-        //doggo.move(MapDirections.EAST);
-        //map.reachedBoundary(doggo);
-        //System.out.println(map);
-        //eagle.move(MapDirections.EAST);
-        //map.reachedBoundary(eagle);
-        //System.out.println(map);
-        //eagle.move(MapDirections.EAST);
-        //map.reachedBoundary(eagle);
-        //System.out.println(map);
-        //eagle.move(MapDirections.EAST);
-        //map.reachedBoundary(eagle);
-        //System.out.println(map);
+            map.place(eagle);
+            map.place(doggo);
+            map.placeInitGrass(100);
+            System.out.println(map);
+            eagle.move(MapDirections.NORTH);
+            map.reachedBoundary(eagle);
+            System.out.println(map);
+            eagle.move(MapDirections.NORTH);
+            map.reachedBoundary(eagle);
+            System.out.println(map);
+            eagle.move(MapDirections.NORTH);
+            map.reachedBoundary(eagle);
+            System.out.println(map);
+
+            doggo.move(MapDirections.WEST);
+            map.reachedBoundary(doggo);
+            System.out.println(map);
+            map.reproduction();
+
+            System.out.println(map);
+            //eagle.move(MapDirections.SOUTH);
+            //map.reachedBoundary(eagle);
+            //System.out.println(map);
+            //doggo.move(MapDirections.EAST);
+            //map.reachedBoundary(doggo);
+            //System.out.println(map);
+            //eagle.move(MapDirections.EAST);
+            //map.reachedBoundary(eagle);
+            //System.out.println(map);
+            //eagle.move(MapDirections.EAST);
+            //map.reachedBoundary(eagle);
+            //System.out.println(map);
+            //eagle.move(MapDirections.EAST);
+            //map.reachedBoundary(eagle);
+            //System.out.println(map);
 
     }
 }

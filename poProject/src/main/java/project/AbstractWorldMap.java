@@ -21,6 +21,7 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
         numOfGrass = grasses;
         placeInitGrass(numOfGrass);
     }
+
     @Override
     public void placeInitGrass(int amountOfGrass) {
         int itr = 0;
@@ -56,7 +57,7 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     public void positionChanged(Vector oldPosition, Vector newPosition){
         Animal animal = animals.get(oldPosition).get(0);
         animals.get(oldPosition).remove(0);
-        if(!isOccupied(newPosition)){
+        if(!isOccupiedByAnimal(newPosition)){
             ArrayList<Animal> newList = new ArrayList<>();
             newList.add(animal);
             animals.put(newPosition, newList);
@@ -94,7 +95,11 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
 
     @Override
     public Object objectAt(Vector position){
-        return animals.get(position);
+        if (animals.get(position) != null){
+            return animals.get(position);
+        } else {
+            return grassMap.get(position);
+        }
     }
 
     public int getRandomNumber(int min, int max) {
@@ -117,6 +122,7 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
             }
         });
     }
+
     @Override
     public boolean eatGrass(Vector position) {
         if (isOccupiedByGrass(position) && isOccupiedByAnimal(position)){
@@ -126,6 +132,7 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
             return false;
         }
     }
+
     public String toString() {
         MapVisualizer mapVisualizer=new MapVisualizer(this);
         return mapVisualizer.draw(findLeftBottomCorner(), findRightTopCorner());

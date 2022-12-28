@@ -3,7 +3,7 @@ package project;
 public class Earth extends AbstractWorldMap{
 
     public Earth(int width, int height, int numOfGrass){
-        super(width, height, numOfGrass);;
+        super(width, height, numOfGrass);
     }
 
     public void reachedPole(Animal animal){
@@ -40,7 +40,6 @@ public class Earth extends AbstractWorldMap{
     @Override
     public boolean canMoveTo(Vector position) {
         //tu trzeba uwzględnić energię
-        System.out.println("xd");
         return true;
     }
 

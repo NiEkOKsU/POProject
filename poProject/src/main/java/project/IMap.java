@@ -15,6 +15,5 @@ public interface IMap {
     void reproduction();
 
     void placeInitGrass(int amountOfGrass);
-
     boolean eatGrass(Vector position);
 }
