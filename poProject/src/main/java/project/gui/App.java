@@ -1,5 +1,6 @@
 package project.gui;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,59 +10,91 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.*;
-
 import java.io.FileNotFoundException;
-import java.util.AbstractMap;
+
 public class App extends Application {
     private AbstractWorldMap map;
-    private Vector lowerLeft = new Vector(0,0);
-    private Vector upperRight = new Vector(20,20);
-    private final GridPane grid = new GridPane();
+    private Vector lowerLeft;
+    private Vector upperRight;
+    private GridPane grid = new GridPane();
+    private final VBox userArgs = new VBox(grid);
+
+    private Stage StartSImulationStage;
+    private Scene StartSimScene;
+    private VBox vbox;
+    private Button StartSImButton;
+
+    private Stage SimStage;
+    private Scene SimScene;
 
     public void init() {
         try {
-            map = new Earth(20, 20, 40);
+            map = new Earth(10, 10, 40);
             map.place(new Animal(map, new Vector(2,2)));
+            lowerLeft = map.findLeftBottomCorner();
+            upperRight = map.findRightTopCorner();
         }
         catch (IllegalArgumentException exception) {
             exception.printStackTrace();
         }
     }
+
+    private VBox addStartButtonAndTextField() {
+        TextField textField = new TextField();
+        Button button = new Button("Let's get this party started!");
+        button.setOnAction(actionEvent -> startEngine(textField));
+        return new VBox(textField, button);
+    }
+
+    private void startEngine(TextField textField) {
+        new VBox(textField);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        restartMap();
-        Label label = new Label("Zwierzak");
-        Scene scene = new Scene(label, 400, 400);
+        StartSImulationStage = createStageOne();
+        SimStage = createStageTwo();
+        StartSImulationStage.show();
+    }
+    private Stage createStageOne() {
+        StartSImulationStage = new Stage(StageStyle.DECORATED);
+        StartSImulationStage.setTitle("Stage 1");
+        StartSImButton = new Button("Click to start simulation");
+        StartSImButton.setOnAction(e -> SimStage.show());
+        vbox = new VBox(StartSImButton);
+        StartSimScene = new Scene(vbox, 200, 50);
+        StartSImulationStage.setScene(StartSimScene);
+        return StartSImulationStage;
+    }
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    private Stage createStageTwo() throws FileNotFoundException {
+        restartMap();
+        SimStage = new Stage(StageStyle.DECORATED);
+        SimStage.setTitle("Stage 2");
+        SimStage.initOwner(StartSImulationStage);
+        SimStage.initModality(Modality.APPLICATION_MODAL);
+        SimScene = new Scene(userArgs, 700, 700);
+        SimStage.setScene(SimScene);
+        return SimStage;
     }
 
     private void restartMap() throws FileNotFoundException {
-
-        checkTheBoundaries();
         clearTheMap();
         makeTheMap();
-
         makeLabelXY();
-
-        makeColumns(upperRight);
-
-        makeRows(upperRight);
-        System.out.println('b');
-    }
-
-    private void checkTheBoundaries() {
-        lowerLeft = map.findLeftBottomCorner();
-        upperRight = map.findRightTopCorner();
+        makeColumns();
+        makeRows();
+        placeObjects();
     }
 
     private void makeTheMap() {
         grid.setGridLinesVisible(true);
-        grid.getColumnConstraints().add(new ColumnConstraints(upperRight.getX()));
-        grid.getRowConstraints().add(new RowConstraints(upperRight.getY()));
+        grid.getColumnConstraints().add(new ColumnConstraints(40));
+        grid.getRowConstraints().add(new RowConstraints(40));
     }
 
     private void clearTheMap() {
@@ -77,29 +110,46 @@ public class App extends Application {
         grid.add(xy, 0, 0);
     }
 
-    private void makeRows(Vector upperRight) {
+    private void makeRows() {
         for (int i = 1; i <= upperRight.getY() + 1; i++){
             Label label = new Label("" + (upperRight.getY() - i + 1));
-            grid.getRowConstraints().add(new RowConstraints(upperRight.getY()));
+            System.out.println(label);
+            grid.getRowConstraints().add(new RowConstraints(40));
             GridPane.setHalignment(label, HPos.CENTER);
             grid.add(label, 0, i);
         }
+        System.out.println(grid);
     }
 
-    private void makeColumns(Vector upperRight) {
+    private void makeColumns() {
         for (int i = 1; i <= upperRight.getX() + 1; i++){
             Label label = new Label("" + (i - 1));
-            grid.getColumnConstraints().add(new ColumnConstraints(upperRight.getX()));
+            grid.getColumnConstraints().add(new ColumnConstraints(40));
             GridPane.setHalignment(label, HPos.CENTER);
             grid.add(label, i, 0);
         }
     }
 
-
-    private VBox addStartButtonAndTextField() {
-        TextField textField = new TextField();
-        Button button = new Button("Let's get this party started!");
-        return new VBox(textField, button);
+    private void placeObjects() throws FileNotFoundException {
+        for (int x = 0; x <= upperRight.getX(); x++){
+            for (int y = 0; y <= upperRight.getY(); y++){
+                Vector position = new Vector(x, y);
+                if (map.objectAt(position) != null) {
+                    IMapElement object = map.objectAt(position);
+                    VBox vbox = new GuiElementBox(object).getVerticalBox();
+                    grid.add(vbox, position.getX() + 1, upperRight.getY() - position.getY() + 1);
+                    GridPane.setHalignment(vbox, HPos.CENTER);
+                }
+            }
+        }
     }
-
+    public void positionChanged(Vector oldPosition, Vector newPosition) {
+        Platform.runLater(() -> {
+            try {
+                restartMap();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 }

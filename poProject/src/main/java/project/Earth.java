@@ -49,8 +49,4 @@ public class Earth extends AbstractWorldMap{
         reachedPole(animal);
     }
 
-    @Override
-    public Vector getPosition() {
-        return null;
-    }
 }

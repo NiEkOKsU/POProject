@@ -2,7 +2,7 @@ package project;
 
 import java.util.*;
 
-public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver, IMapElement{
+public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     protected final int mapWidth;
     protected final int mapHeight;
     protected final int numOfGrass;
@@ -139,8 +139,5 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver,
     public String toString() {
         MapVisualizer mapVisualizer=new MapVisualizer(this);
         return mapVisualizer.draw(findLeftBottomCorner(), findRightTopCorner());
-    }
-    public String getImage(){
-        return "a";
     }
 }

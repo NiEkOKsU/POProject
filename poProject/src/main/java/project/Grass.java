@@ -8,7 +8,7 @@ public class Grass implements IMapElement{
 
     @Override
     public String getImage() {
-        return null;
+        return "grass.jpg";
     }
 
     public Vector getPosition() {

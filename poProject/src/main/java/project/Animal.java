@@ -33,8 +33,8 @@ public class Animal implements IMapElement {
     }
 
     @Override
-    public String getImage() {
-        return null;
+    public String getImage()  {
+        return "animal.png";
     }
 
     public Vector getPosition() {
@@ -93,6 +93,7 @@ public class Animal implements IMapElement {
         int lenghtOfDNA = genes.lenghtOfGenes();
         MapDirections newDirection = getGenOnIdx(currentGen);
         Vector newPosition = position;
+        System.out.println("XD");
         switch (direction){
             case NORTH -> newPosition = position.add(newDirection.toUnitVector());
             case SOUTH -> newPosition = position.add(newDirection.toUnitVector());
