@@ -11,15 +11,16 @@ public class Animal {
     private IMap map;
     private Genotype genes;
     private List<IPositionChangeObserver> observers = new ArrayList<>();
-
     private int age;
     private int childrens;
+    private int currentGen;
     public Animal(IMap map, Vector position) {
         this.direction = MapDirections.NORTH;
         this.position = position;
         this.energy = 10;
         this.map = map;
         this.genes = new Genotype();
+        currentGen = 0;
     }
 
     public Animal(IMap map, Vector position, Animal animal1, Animal animal2) {
@@ -28,6 +29,7 @@ public class Animal {
         this.energy = 10;
         this.map = map;
         this.genes = new Genotype(animal1, animal2);
+        currentGen = 0;
     }
 
     public Vector getPosition() {
@@ -82,7 +84,9 @@ public class Animal {
         return Objects.equals(position, checkPosition);
     }
 
-    public void move(MapDirections newDirection){
+    public void move(){
+        int lenghtOfDNA = genes.lenghtOfGenes();
+        MapDirections newDirection = getGenOnIdx(currentGen);
         Vector newPosition = position;
         switch (direction){
             case NORTH -> newPosition = position.add(newDirection.toUnitVector());
@@ -101,6 +105,9 @@ public class Animal {
         }
         direction = newDirection;
         age += 1;
+        currentGen += 1;
+        currentGen %= lenghtOfDNA;
+
     }
     public void removeObserver(IPositionChangeObserver observer) {
         observers.remove(observer);

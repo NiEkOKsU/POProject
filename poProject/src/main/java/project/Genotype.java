@@ -91,6 +91,10 @@ public class Genotype {
         }
     }
 
+    public int lenghtOfGenes(){
+        return genes.length;
+    }
+
     @Override
     public String toString() {
         return "Genotype{" +
