@@ -7,7 +7,7 @@ public class RunProject {
 
     public static void main(String[] args) {
 
-            IMap map = new Earth(20, 20, 40);
+            IMap map = new Earth(10, 10, 40);
             Animal eagle = new Animal(map, new Vector(2,2));
             Animal doggo = new Animal(map, new Vector(3,3));
             Application.launch(App.class, args);
@@ -46,6 +46,5 @@ public class RunProject {
             //eagle.move(MapDirections.EAST);
             //map.reachedBoundary(eagle);
             //System.out.println(map);
-//
     }
 }
