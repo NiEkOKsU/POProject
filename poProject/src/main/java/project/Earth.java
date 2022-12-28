@@ -48,4 +48,9 @@ public class Earth extends AbstractWorldMap{
         aroundTheWorld(animal);
         reachedPole(animal);
     }
+
+    @Override
+    public Vector getPosition() {
+        return null;
+    }
 }

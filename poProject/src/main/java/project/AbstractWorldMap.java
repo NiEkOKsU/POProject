@@ -2,7 +2,7 @@ package project;
 
 import java.util.*;
 
-public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
+public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver, IMapElement{
     protected final int mapWidth;
     protected final int mapHeight;
     protected final int numOfGrass;
@@ -97,9 +97,9 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     }
 
     @Override
-    public Object objectAt(Vector position){
+    public IMapElement objectAt(Vector position){
         if (animals.get(position) != null){
-            return animals.get(position);
+            return animals.get(position).get(0);
         } else {
             return grassMap.get(position);
         }
@@ -140,5 +140,7 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
         MapVisualizer mapVisualizer=new MapVisualizer(this);
         return mapVisualizer.draw(findLeftBottomCorner(), findRightTopCorner());
     }
-
+    public String getImage(){
+        return "a";
+    }
 }

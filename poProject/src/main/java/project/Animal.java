@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Animal {
+public class Animal implements IMapElement {
     private MapDirections direction;
     private Vector position;
     private int energy;
@@ -30,6 +30,11 @@ public class Animal {
         this.map = map;
         this.genes = new Genotype(animal1, animal2);
         currentGen = 0;
+    }
+
+    @Override
+    public String getImage() {
+        return null;
     }
 
     public Vector getPosition() {
