@@ -57,6 +57,9 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     public void positionChanged(Vector oldPosition, Vector newPosition){
         Animal animal = animals.get(oldPosition).get(0);
         animals.get(oldPosition).remove(0);
+        if(animals.get(oldPosition).size() == 0){
+            animals.remove(oldPosition);
+        }
         if(!isOccupiedByAnimal(newPosition)){
             ArrayList<Animal> newList = new ArrayList<>();
             newList.add(animal);
