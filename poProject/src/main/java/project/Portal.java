@@ -28,4 +28,9 @@ public class Portal extends AbstractWorldMap{
         }
 
     }
+
+    @Override
+    public Vector getPosition() {
+        return null;
+    }
 }
