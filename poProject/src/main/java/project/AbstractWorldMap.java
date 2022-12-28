@@ -1,22 +1,57 @@
 package project;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     protected final int mapWidth;
     protected final int mapHeight;
+    protected final int numOfGrass;
+    protected final int equatorStart;
+    protected final int equatorEnd;
     protected HashMap<Vector, ArrayList<Animal>> animals;
     private List<IPositionChangeObserver> observers = new ArrayList<>();
+    private final Map<Vector, Grass> grassMap = new HashMap<>();
 
-    protected AbstractWorldMap(int width, int height) {
+    protected AbstractWorldMap(int width, int height, int grasses) {
         animals = new HashMap<>();
         mapWidth = width;
         mapHeight = height;
+        equatorStart = mapHeight*4/10;
+        equatorEnd = mapHeight*6/10;
+        numOfGrass = grasses;
+        placeInitGrass(numOfGrass);
     }
+    @Override
+    public void placeInitGrass(int amountOfGrass) {
+        int itr = 0;
+        while (itr != amountOfGrass){
+            int y = 0;
+            int randomNumber = getRandomNumber(0,10);
+            if (randomNumber > 1){
+                y = getRandomNumber(equatorStart, equatorEnd + 1);
+            } else {
+                int randomNumber2 = getRandomNumber(0, 2);
+                if (randomNumber2==0){
+                    y = getRandomNumber(0, equatorStart);
+                } else {
+                    y = getRandomNumber(equatorEnd + 1, mapHeight + 1);
+                }
+            }
 
+            int x = getRandomNumber(0, mapWidth + 1);
+            Vector potentialPosition = new Vector(x, y);
+            if (!isOccupiedByGrass(potentialPosition)){
+                grassMap.put(potentialPosition, new Grass(potentialPosition));
+                itr += 1;
+            }
+        }
+    }
+    public boolean isOccupiedByGrass(Vector position) {
+        return (grassMap.containsKey(position));
+    }
+    public boolean isOccupiedByAnimal(Vector position) {
+        return (animals.containsKey(position));
+    }
     @Override
     public void positionChanged(Vector oldPosition, Vector newPosition){
         Animal animal = animals.get(oldPosition).get(0);
@@ -54,7 +89,7 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
 
     @Override
     public boolean isOccupied(Vector position){
-        return (animals.containsKey(position));
+        return (isOccupiedByAnimal(position) || isOccupiedByGrass(position));
     }
 
     @Override
@@ -82,7 +117,15 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
             }
         });
     }
-
+    @Override
+    public boolean eatGrass(Vector position) {
+        if (isOccupiedByGrass(position) && isOccupiedByAnimal(position)){
+            grassMap.remove(position);
+            return true;
+        } else {
+            return false;
+        }
+    }
     public String toString() {
         MapVisualizer mapVisualizer=new MapVisualizer(this);
         return mapVisualizer.draw(findLeftBottomCorner(), findRightTopCorner());

@@ -4,7 +4,7 @@ public class RunProject {
 
     public static void main(String[] args) {
 
-        IMap map = new Portal(5, 5);
+        IMap map = new Portal(5, 5, 5);
         Animal eagle = new Animal(map, new Vector(2,2));
         Animal doggo = new Animal(map, new Vector(2,2));
 

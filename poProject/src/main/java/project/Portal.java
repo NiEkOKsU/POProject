@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 public class Portal extends AbstractWorldMap{
 
-    public Portal(int width, int height) {
-        super(width, height);
+    public Portal(int width, int height, int numOfGrass) {
+        super(width, height, numOfGrass);
     }
 
     @Override
