@@ -74,14 +74,14 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
 
     @Override
     public boolean place(Animal animal){
-        if (!this.isOccupied(animal.getPosition()) && this.canMoveTo(animal.getPosition())){
+        if (!this.isOccupied(animal.getPosition()) && this.canMoveTo(animal)){
             ArrayList<Animal> newList = new ArrayList<>();
             newList.add(animal);
             animals.put(animal.getPosition(), newList);
             animal.addObserver(this);
             return true;
         }
-        else if(this.canMoveTo(animal.getPosition())){
+        else if(this.canMoveTo(animal)){
             ArrayList<Animal> listt = animals.get(animal.getPosition());
             listt.add(animal);
             animals.replace(animal.getPosition(), listt);
@@ -89,6 +89,12 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
             return true;
         }
         throw new IllegalArgumentException(animal.getPosition() + " avaliable for this animal");
+    }
+
+    @Override
+    public void animalsIsDead(Animal animal){
+        animal.removeObserver(this);
+        animals.remove(animal);
     }
 
     @Override
@@ -116,6 +122,17 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     public Vector findRightTopCorner() {
         return new Vector(mapWidth, mapHeight);
     }
+
+    @Override
+    public int getMapWidth(){
+        return mapWidth;
+    }
+
+    @Override
+    public int getMapHeight(){
+        return mapHeight;
+    }
+
 
     public void reproduction(){
         animals.forEach((key, value)->{
