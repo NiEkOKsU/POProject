@@ -34,7 +34,7 @@ public class App extends Application {
     public void init() {
         try {
             map = new Earth(10, 10, 40);
-            map.place(new Animal(map, new Vector(2,2)));
+            //map.place(new Animal(map, new Vector(2,2)));
             lowerLeft = map.findLeftBottomCorner();
             upperRight = map.findRightTopCorner();
         }

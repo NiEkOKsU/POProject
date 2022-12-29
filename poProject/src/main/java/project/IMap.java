@@ -2,7 +2,7 @@ package project;
 
 public interface IMap {
 
-    boolean canMoveTo(Vector position);
+    boolean canMoveTo(Animal animal);
 
     boolean place(Animal animal);
 
@@ -16,4 +16,8 @@ public interface IMap {
 
     void placeInitGrass(int amountOfGrass);
     boolean eatGrass(Vector position);
+    int getMapHeight();
+    int getMapWidth();
+    boolean isOccupiedByAnimal(Vector position);
+    void animalsIsDead(Animal animal);
 }
