@@ -132,10 +132,7 @@ public class Animal implements IMapElement {
 
     @Override
     public String toString() {
-        return "A{" +
-                "d = " + direction +
-                ", p = " + position +
-                '}';
+        return "A";
     }
 
     void positionChanged(Vector oldPosition, Vector newPosition){

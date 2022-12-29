@@ -143,6 +143,13 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
         });
     }
 
+    public ArrayList<Animal> getAnimalsAtPosition(Vector position){
+        if(isOccupiedByAnimal(position)){
+            return animals.get(position);
+        }
+        return null;
+    }
+
     @Override
     public boolean eatGrass(Vector position) {
         if (isOccupiedByGrass(position) && isOccupiedByAnimal(position)){

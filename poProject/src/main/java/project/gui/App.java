@@ -2,6 +2,7 @@ package project.gui;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,6 +11,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -22,7 +24,7 @@ public class App extends Application {
     private Vector upperRight;
     private GridPane grid = new GridPane();
     private final VBox userArgs = new VBox(grid);
-
+    private final VBox simStats = new VBox();
     private Stage StartSImulationStage;
     private Scene StartSimScene;
     private VBox vbox;
@@ -41,17 +43,6 @@ public class App extends Application {
         catch (IllegalArgumentException exception) {
             exception.printStackTrace();
         }
-    }
-
-    private VBox addStartButtonAndTextField() {
-        TextField textField = new TextField();
-        Button button = new Button("Let's get this party started!");
-        button.setOnAction(actionEvent -> startEngine(textField));
-        return new VBox(textField, button);
-    }
-
-    private void startEngine(TextField textField) {
-        new VBox(textField);
     }
 
     @Override
@@ -77,7 +68,7 @@ public class App extends Application {
         SimStage.setTitle("Stage 2");
         SimStage.initOwner(StartSImulationStage);
         SimStage.initModality(Modality.APPLICATION_MODAL);
-        SimScene = new Scene(userArgs, 700, 700);
+        SimScene = new Scene(userArgs, 700, 800);
         SimStage.setScene(SimScene);
         return SimStage;
     }
@@ -89,16 +80,44 @@ public class App extends Application {
         makeColumns();
         makeRows();
         placeObjects();
+        placeStats();
+    }
+
+    private void placeStats() {
+        Stats simulationStats = new Stats(map);
+        Text text1 = new Text("Ilosc zwierzakow: " + simulationStats.getNumOfAnimals());
+        VBox animalsNum = new VBox(text1);
+        animalsNum.setAlignment(Pos.CENTER);
+        grid.add(animalsNum, 0, upperRight.getX() + 2);
+        Text text2 = new Text("Ilosc kempek trawy: " + simulationStats.getAmmOfGras());
+        VBox grassAmm = new VBox(text2);
+        grassAmm.setAlignment(Pos.CENTER);
+        grid.add(grassAmm, 0, upperRight.getX() + 3);
+        Text text3 = new Text("Ilosc pustych pol: " + simulationStats.getNumOfFreeScetors());
+        VBox freeScetors = new VBox(text3);
+        freeScetors.setAlignment(Pos.CENTER);
+        grid.add(freeScetors, 0, upperRight.getX() + 4);
+        Text text4 = new Text("Najpopularniejszy genotyp: " + simulationStats.mostPopularGenotype());
+        VBox mostPopGenotype = new VBox(text4);
+        mostPopGenotype.setAlignment(Pos.CENTER);
+        grid.add(mostPopGenotype, 0, upperRight.getX() + 5);
+        Text text5 = new Text("Srednia energia zyjacych zwierzakow: " + simulationStats.eneregyMean());
+        VBox energyMean = new VBox(text5);
+        energyMean.setAlignment(Pos.CENTER);
+        grid.add(energyMean, 0, upperRight.getX() + 6);
+        Text text6 = new Text("Srednia dlugosc zycia zwierzaka: " + simulationStats.meanOfAgeDeathAnimals());
+        VBox meanAgeOfLife = new VBox(text6);
+        meanAgeOfLife.setAlignment(Pos.CENTER);
+        grid.add(meanAgeOfLife, 0, upperRight.getX() + 7);
+
     }
 
     private void makeTheMap() {
-        grid.setGridLinesVisible(true);
         grid.getColumnConstraints().add(new ColumnConstraints(40));
         grid.getRowConstraints().add(new RowConstraints(40));
     }
 
     private void clearTheMap() {
-        grid.setGridLinesVisible(false);
         grid.getChildren().clear();
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
@@ -113,12 +132,13 @@ public class App extends Application {
     private void makeRows() {
         for (int i = 1; i <= upperRight.getY() + 1; i++){
             Label label = new Label("" + (upperRight.getY() - i + 1));
-            System.out.println(label);
             grid.getRowConstraints().add(new RowConstraints(40));
             GridPane.setHalignment(label, HPos.CENTER);
             grid.add(label, 0, i);
         }
-        System.out.println(grid);
+        for (int i = upperRight.getY() + 2; i <= upperRight.getY() + 7; i++){
+            grid.getRowConstraints().add(new RowConstraints(40));
+        }
     }
 
     private void makeColumns() {
