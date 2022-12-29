@@ -9,10 +9,10 @@ public class RunProject {
 
             IMap map = new Earth(10, 10, 40);
             Animal eagle = new Animal(map, new Vector(2,2));
-            //Animal doggo = new Animal(map, new Vector(3,3));
+            Animal doggo = new Animal(map, new Vector(3,3));
             Application.launch(App.class, args);
             map.place(eagle);
-            //map.place(doggo);
+            map.place(doggo);
             //map.placeInitGrass(100);
             System.out.println(map);
             eagle.move();
