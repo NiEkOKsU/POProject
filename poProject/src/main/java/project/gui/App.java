@@ -23,7 +23,7 @@ public class App extends Application {
     public void init() {
         try {
             map = new Earth(20, 20, 40);
-            map.place(new Animal(map, new Vector(2,2)));
+            //map.place(new Animal(map, new Vector(2,2)));
         }
         catch (IllegalArgumentException exception) {
             exception.printStackTrace();

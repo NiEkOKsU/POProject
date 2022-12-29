@@ -2,6 +2,8 @@ package project;
 
 public class Earth extends AbstractWorldMap{
 
+    private final int energyToReproduce = 15;
+
     public Earth(int width, int height, int numOfGrass){
         super(width, height, numOfGrass);
     }
@@ -38,9 +40,14 @@ public class Earth extends AbstractWorldMap{
 
     }
     @Override
-    public boolean canMoveTo(Vector position) {
-        //tu trzeba uwzględnić energię
-        return true;
+    public boolean canMoveTo(Animal animal) {
+        if (isOccupied(animal.getPosition()) && animal.getEnergy() >= energyToReproduce) {
+            return true;
+        } else if (!isOccupied(animal.getPosition())){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

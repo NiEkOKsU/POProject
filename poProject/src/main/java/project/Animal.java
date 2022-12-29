@@ -8,18 +8,22 @@ public class Animal implements IMapElement {
     private MapDirections direction;
     private Vector position;
     private int energy;
+    private int energyByEat;
+    private int energyToMove = 5;
     private IMap map;
     private Genotype genes;
     private List<IPositionChangeObserver> observers = new ArrayList<>();
     private int age;
     private int childrens;
     private int currentGen;
-    public Animal(IMap map, Vector position) {
+
+    public Animal(IMap map, Vector position, int energy, int energyByEat) {
         this.direction = MapDirections.NORTH;
         this.position = position;
-        this.energy = 10;
+        this.energy = energy;
         this.map = map;
         this.genes = new Genotype();
+        this.energyByEat = energyByEat;
         currentGen = 0;
     }
 
@@ -93,6 +97,15 @@ public class Animal implements IMapElement {
         int lenghtOfDNA = genes.lenghtOfGenes();
         MapDirections newDirection = getGenOnIdx(currentGen);
         Vector newPosition = position;
+        if (map.eatGrass(newPosition)){
+            setEnergy(getEnergy() + energyByEat);
+        }
+        if (getEnergy() < 0 ){
+            map.animalsIsDead(this);
+
+            System.out.println(this);
+        }
+
         switch (direction){
             case NORTH -> newPosition = position.add(newDirection.toUnitVector());
             case SOUTH -> newPosition = position.add(newDirection.toUnitVector());
@@ -104,10 +117,11 @@ public class Animal implements IMapElement {
             case SOUTH_WEST -> newPosition = position.add(newDirection.toUnitVector());
 
         }
-        if(map.canMoveTo(newPosition)){
-            positionChanged(position, newPosition);
-            position = newPosition;
-        }
+
+        positionChanged(position, newPosition);
+        position = newPosition;
+
+        setEnergy(getEnergy() - energyToMove);
         direction = newDirection;
         age += 1;
         currentGen += 1;
