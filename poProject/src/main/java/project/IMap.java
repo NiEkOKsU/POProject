@@ -1,5 +1,8 @@
 package project;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public interface IMap {
 
     boolean canMoveTo(Animal animal);
@@ -12,12 +15,11 @@ public interface IMap {
 
     void reachedBoundary(Animal animal);
 
-    void reproduction();
-
     void placeInitGrass(int amountOfGrass);
     boolean eatGrass(Vector position);
     int getMapHeight();
     int getMapWidth();
     boolean isOccupiedByAnimal(Vector position);
     void animalsIsDead(Animal animal);
+    HashMap<Vector, ArrayList<Animal>> getAnimalMap();
 }

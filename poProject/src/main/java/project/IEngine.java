@@ -1,5 +1,5 @@
 package project;
 
-public interface IEngine {
+public interface IEngine extends Runnable {
     void run();
 }

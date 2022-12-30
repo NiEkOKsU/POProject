@@ -18,7 +18,7 @@ import javafx.stage.StageStyle;
 import project.*;
 import java.io.FileNotFoundException;
 
-public class App extends Application {
+public class App extends Application implements IPositionChangeObserver {
     private AbstractWorldMap map;
     private Vector lowerLeft;
     private Vector upperRight;
@@ -33,10 +33,19 @@ public class App extends Application {
     private Stage SimStage;
     private Scene SimScene;
 
+    private SimulationEngine engine;
     public void init() {
         try {
-            map = new Earth(10, 10, 40);
-            //map.place(new Animal(map, new Vector(2,2)));
+            int mapWidth = 5;
+            int mapHeight = 5;
+            int startingNumOfGrass = 8;
+            int numOfAnimlas = 5;
+            int startingEnergy = 50;
+            int energyByEat = 8;
+            int numOfGrass = 5;
+            int portalEnergy = 10;
+            map = new Portal(mapWidth, mapHeight, startingNumOfGrass, portalEnergy);
+            engine = new SimulationEngine(500, map, numOfAnimlas, startingEnergy, energyByEat, numOfGrass, this);
             lowerLeft = map.findLeftBottomCorner();
             upperRight = map.findRightTopCorner();
         }
@@ -51,11 +60,28 @@ public class App extends Application {
         SimStage = createStageTwo();
         StartSImulationStage.show();
     }
+
+    private void ButtonEvent(){
+        SimStage.show();
+        int mapWidth = 5;
+        int mapHeight = 5;
+        int startingNumOfGrass = 20;
+        int numOfAnimlas = 20;
+        int startingEnergy = 20;
+        int energyByEat = 8;
+        int numOfGrass = 2;
+        int portalEnergy = 10;
+        map = new Portal(mapWidth, mapHeight, startingNumOfGrass, portalEnergy);
+        engine = new SimulationEngine(500, map, numOfAnimlas, startingEnergy, energyByEat, numOfGrass, this);
+        Thread engineThread = new Thread(engine);
+        engineThread.start();
+    }
+
     private Stage createStageOne() {
         StartSImulationStage = new Stage(StageStyle.DECORATED);
         StartSImulationStage.setTitle("Stage 1");
         StartSImButton = new Button("Click to start simulation");
-        StartSImButton.setOnAction(e -> SimStage.show());
+        StartSImButton.setOnAction(e -> ButtonEvent());
         vbox = new VBox(StartSImButton);
         StartSimScene = new Scene(vbox, 200, 50);
         StartSImulationStage.setScene(StartSimScene);
@@ -73,7 +99,7 @@ public class App extends Application {
         return SimStage;
     }
 
-    private void restartMap() throws FileNotFoundException {
+    public void restartMap() throws FileNotFoundException {
         clearTheMap();
         makeTheMap();
         makeLabelXY();
@@ -84,7 +110,7 @@ public class App extends Application {
     }
 
     private void placeStats() {
-        Stats simulationStats = new Stats(map);
+        Stats simulationStats = new Stats(map, engine.getAnimals());
         Text text1 = new Text("Ilosc zwierzakow: " + simulationStats.getNumOfAnimals());
         VBox animalsNum = new VBox(text1);
         animalsNum.setAlignment(Pos.CENTER);
@@ -163,6 +189,7 @@ public class App extends Application {
             }
         }
     }
+    @Override
     public void positionChanged(Vector oldPosition, Vector newPosition) {
         Platform.runLater(() -> {
             try {

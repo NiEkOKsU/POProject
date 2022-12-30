@@ -8,33 +8,33 @@ import java.util.Objects;
 public class Stats {
     private final AbstractWorldMap map;
 
-    private final List<Animal> animals = new ArrayList<>();
-    private int ammOfgrass = 0;
-    public Stats(AbstractWorldMap map) {
-        this.map = map;
-        findElemsOnMap();
-    }
+    private final List<Animal> animals;
 
-    private void findElemsOnMap(){
-        for (int x = 0; x <= map.mapWidth; x++){
-            for (int y = 0; y <= map.mapHeight; y++){
-                Vector position = new Vector(x, y);
-                if (map.isOccupiedByAnimal(position)) {
-                    List<Animal> animalsOnPosition = map.getAnimalsAtPosition(position);
-                    animals.addAll(animalsOnPosition);
-                }
-                if (map.isOccupiedByGrass(position)) {
-                    ammOfgrass += 1;
-                }
-            }
-        }
+    public Stats(AbstractWorldMap map, List<Animal> animals) {
+        this.map = map;
+        this.animals = animals;
     }
 
     public String getNumOfAnimals(){
-        return "" + animals.size();
+        int numOfAnimals = 0;
+        for(Animal animal: animals){
+            if(animal.getEnergy() > -1){
+                numOfAnimals += 1;
+            }
+        }
+        return "" + numOfAnimals;
     }
 
     public String getAmmOfGras(){
+        int ammOfgrass = 0;
+        for(int x = 0; x < map.mapWidth; x++){
+            for(int y = 0; y < map.mapHeight; y++){
+                Vector pos = new Vector(x, y);
+                if(map.isOccupiedByGrass(pos)){
+                    ammOfgrass++;
+                }
+            }
+        }
         return "" + ammOfgrass;
     }
 
@@ -105,7 +105,7 @@ public class Stats {
         double ageSum = 0;
         double numOfDeathAnimals = 0;
         for(Animal animal : animals){
-            if(animal.getEnergy() == -1){
+            if(animal.getEnergy() < 0){
                 ageSum += animal.getAge();
                 numOfDeathAnimals += 1;
             }

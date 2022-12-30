@@ -74,7 +74,7 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
 
     @Override
     public boolean place(Animal animal){
-        if (!this.isOccupied(animal.getPosition()) && this.canMoveTo(animal)){
+        if (!this.isOccupiedByAnimal(animal.getPosition()) && this.canMoveTo(animal)){
             ArrayList<Animal> newList = new ArrayList<>();
             newList.add(animal);
             animals.put(animal.getPosition(), newList);
@@ -82,9 +82,10 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
             return true;
         }
         else if(this.canMoveTo(animal)){
-            ArrayList<Animal> listt = animals.get(animal.getPosition());
-            listt.add(animal);
-            animals.replace(animal.getPosition(), listt);
+            ArrayList<Animal> newList = animals.get(animal.getPosition());
+            System.out.println(newList);
+            newList.add(animal);
+            animals.replace(animal.getPosition(), newList);
             animal.addObserver(this);
             return true;
         }
@@ -94,7 +95,20 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
     @Override
     public void animalsIsDead(Animal animal){
         animal.removeObserver(this);
-        animals.remove(animal);
+        Vector animalPos = animal.getPosition();
+        ArrayList<Animal> animalsAtPos = getAnimalsAtPosition(animalPos);
+        if(animalsAtPos != null){
+            if(animalsAtPos.size() == 1){
+                animals.remove(animalPos);
+            }
+            else{
+                int i = 0;
+                while(animalsAtPos.get(i).getEnergy() != animal.getEnergy()){
+                    i++;
+                }
+                animalsAtPos.remove(i);
+            }
+        }
     }
 
     @Override
@@ -133,14 +147,8 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
         return mapHeight;
     }
 
-
-    public void reproduction(){
-        animals.forEach((key, value)->{
-            if (value.size() > 1){
-                value = new Reproduction(value, key).makingChildrens();
-                animals.replace(key, value);
-            }
-        });
+    public HashMap<Vector, ArrayList<Animal>> getAnimalMap(){
+        return animals;
     }
 
     public ArrayList<Animal> getAnimalsAtPosition(Vector position){

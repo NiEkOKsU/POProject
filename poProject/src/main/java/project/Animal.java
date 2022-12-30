@@ -9,7 +9,7 @@ public class Animal implements IMapElement {
     private Vector position;
     private int energy;
     private int energyByEat;
-    private int energyToMove = 5;
+    private int energyToMove = 1;
     private IMap map;
     private Genotype genes;
     private List<IPositionChangeObserver> observers = new ArrayList<>();
@@ -36,7 +36,15 @@ public class Animal implements IMapElement {
 
     @Override
     public String getImage()  {
-        return "animal.png";
+        if(this.age > 20){
+            return "animal.png";
+        }
+        else if(this.age > 1){
+            return "animal2.jpg";
+        }
+        else{
+            return "animal3.jpg";
+        }
     }
 
     public Vector getPosition() {
