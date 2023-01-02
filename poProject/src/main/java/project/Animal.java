@@ -1,5 +1,6 @@
 package project;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +17,7 @@ public class Animal implements IMapElement {
     private int age;
     private int childrens;
     private int currentGen;
-    public Animal(IMap map, Vector position, int energy, int energyByEat) {
+    public Animal(IMap map, Vector position, int energy, int energyByEat) throws FileNotFoundException {
         this.direction = MapDirections.NORTH;
         this.position = position;
         this.energy = energy;
@@ -26,7 +27,7 @@ public class Animal implements IMapElement {
         currentGen = 0;
     }
 
-    public Animal(IMap map, Vector position, Animal animal1, Animal animal2) {
+    public Animal(IMap map, Vector position, Animal animal1, Animal animal2) throws FileNotFoundException {
         this.direction = MapDirections.NORTH;
         this.position = position;
         this.map = map;
@@ -36,10 +37,10 @@ public class Animal implements IMapElement {
 
     @Override
     public String getImage()  {
-        if(this.age > 20){
+        if(this.energy > 10){
             return "animal.png";
         }
-        else if(this.age > 1){
+        else if(this.energy > 5){
             return "animal2.jpg";
         }
         else{

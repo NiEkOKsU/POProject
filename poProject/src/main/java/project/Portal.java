@@ -1,14 +1,24 @@
 package project;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Portal extends AbstractWorldMap{
     private final int energyToTeleport;
-    private final int energyToReproduce = 15;
+    private int energyToReproduce = 15;
 
-    public Portal(int width, int height, int numOfGrass, int energyToTeleport) {
+    public Portal(int width, int height, int numOfGrass, int energyToTeleport) throws FileNotFoundException {
         super(width, height, numOfGrass);
         this.energyToTeleport = energyToTeleport;
+        String strCutter = ": ";
+        File plik = new File("src/main/java/project/gui/DaneSymulacji.txt");
+        Scanner odczyt = new Scanner(plik);
+        for(int i = 0; i < 14; i++){
+            odczyt.nextLine();
+        }
+        energyToReproduce = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
     }
 
     @Override

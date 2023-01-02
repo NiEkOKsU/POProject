@@ -16,12 +16,23 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.*;
+
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class App extends Application implements IPositionChangeObserver {
     private AbstractWorldMap map;
     private Vector lowerLeft;
     private Vector upperRight;
+    private int mapWidth = 10;
+    private int mapHeight = 10;
+    private int startingNumOfGrass = 60;
+    private int numOfAnimlas = 10;
+    private int startingEnergy = 20;
+    private int energyByEat = 8;
+    private int numOfGrass = 2;
+    private int portalEnergy = 10;
     private GridPane grid = new GridPane();
     private final VBox userArgs = new VBox(grid);
     private final VBox simStats = new VBox();
@@ -36,20 +47,29 @@ public class App extends Application implements IPositionChangeObserver {
     private SimulationEngine engine;
     public void init() {
         try {
-            int mapWidth = 5;
-            int mapHeight = 5;
-            int startingNumOfGrass = 8;
-            int numOfAnimlas = 5;
-            int startingEnergy = 50;
-            int energyByEat = 8;
-            int numOfGrass = 5;
-            int portalEnergy = 10;
-            map = new Portal(mapWidth, mapHeight, startingNumOfGrass, portalEnergy);
+            String strCutter = ": ";
+            File plik = new File("src/main/java/project/gui/DaneSymulacji.txt");
+            Scanner odczyt = new Scanner(plik);
+            mapWidth = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            mapHeight = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            startingNumOfGrass = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            numOfAnimlas = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            startingEnergy = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            energyByEat = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            numOfGrass = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            portalEnergy = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+            String mapType = odczyt.nextLine();
+            if(mapType.equals("Portal")){
+                map = new Portal(mapWidth, mapHeight, startingNumOfGrass, portalEnergy);
+            }
+            else{
+                map = new Earth(mapWidth, mapHeight, startingNumOfGrass);
+            }
             engine = new SimulationEngine(500, map, numOfAnimlas, startingEnergy, energyByEat, numOfGrass, this);
-            lowerLeft = map.findLeftBottomCorner();
-            upperRight = map.findRightTopCorner();
+            lowerLeft = new Vector(0,0);
+            upperRight = new Vector(mapWidth,mapHeight);
         }
-        catch (IllegalArgumentException exception) {
+        catch (IllegalArgumentException | FileNotFoundException exception) {
             exception.printStackTrace();
         }
     }
@@ -63,16 +83,6 @@ public class App extends Application implements IPositionChangeObserver {
 
     private void ButtonEvent(){
         SimStage.show();
-        int mapWidth = 5;
-        int mapHeight = 5;
-        int startingNumOfGrass = 20;
-        int numOfAnimlas = 20;
-        int startingEnergy = 20;
-        int energyByEat = 8;
-        int numOfGrass = 2;
-        int portalEnergy = 10;
-        map = new Portal(mapWidth, mapHeight, startingNumOfGrass, portalEnergy);
-        engine = new SimulationEngine(500, map, numOfAnimlas, startingEnergy, energyByEat, numOfGrass, this);
         Thread engineThread = new Thread(engine);
         engineThread.start();
     }

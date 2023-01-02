@@ -1,10 +1,21 @@
 package project;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Earth extends AbstractWorldMap{
 
-    private final int energyToReproduce = 15;
-    public Earth(int width, int height, int numOfGrass){
+    private int energyToReproduce;
+    public Earth(int width, int height, int numOfGrass) throws FileNotFoundException {
         super(width, height, numOfGrass);
+        String strCutter = ": ";
+        File plik = new File("src/main/java/project/gui/DaneSymulacji.txt");
+        Scanner odczyt = new Scanner(plik);
+        for(int i = 0; i < 14; i++){
+            odczyt.nextLine();
+        }
+        energyToReproduce = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
     }
 
     public void reachedPole(Animal animal){

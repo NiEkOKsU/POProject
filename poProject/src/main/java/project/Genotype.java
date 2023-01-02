@@ -1,14 +1,18 @@
 package project;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Genotype {
-    private final int numOfGenes = 6;
-    public final int bornAnimalEnergy = 10;
-    private final int minimalMutations = 0;
-    private final int maximalMutations = 20;
-    public MapDirections[] genes = new MapDirections[numOfGenes];
-    public Genotype(Animal animal1, Animal animal2){
+    private int numOfGenes;
+    public int bornAnimalEnergy;
+    private int minimalMutations;
+    private int maximalMutations;
+    public MapDirections[] genes;
+    public Genotype(Animal animal1, Animal animal2) throws FileNotFoundException {
+        simDataSet();
         float energySum = animal1.getEnergy() + animal2.getEnergy();
         int numOfGenesFromParent1 = (int)(numOfGenes * (animal1.getEnergy()/energySum));
         int side = (int)(Math.random()*2);
@@ -38,7 +42,8 @@ public class Genotype {
         mutations();
     }
 
-    public Genotype() {
+    public Genotype() throws FileNotFoundException {
+        simDataSet();
         int genome;
         for(int i = 0; i < numOfGenes; i++){
             this.genes[i] = MapDirections.NORTH;
@@ -72,15 +77,40 @@ public class Genotype {
         }
     }
 
+    public void simDataSet() throws FileNotFoundException {
+        String strCutter = ": ";
+        File plik = new File("src/main/java/project/gui/DaneSymulacji.txt");
+        Scanner odczyt = new Scanner(plik);
+        for(int i = 0; i < 9; i++){
+            odczyt.nextLine();
+        }
+        numOfGenes = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+        bornAnimalEnergy = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+        minimalMutations = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+        maximalMutations = Integer.parseInt(odczyt.nextLine().split(strCutter)[1]);
+        genes = new MapDirections[numOfGenes];
+    }
+
+
     private void mutations(){
         int mutation;
+        int numOfMutations = 0;
+        int range = 3;
         for (int i = 0; i < numOfGenes; i++) {
-            mutation = (int)(Math.random() * 3) - 1;
+            mutation = (int)(Math.random() * range);
             if(mutation == 1){
                 genes[i] = genes[i].next();
+                numOfMutations += 1;
             }
-            else if(mutation == -1){
+            else if(mutation == 0){
                 genes[i] = genes[i].previous();
+                numOfMutations += 1;
+            }
+            if(numOfMutations == maximalMutations){
+                break;
+            }
+            if(numOfGenes - i - 1 == minimalMutations){
+                range = 2;
             }
         }
     }
