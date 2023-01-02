@@ -2,6 +2,7 @@ package project;
 
 import project.gui.App;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,11 +17,6 @@ public class SimulationEngine implements IEngine, Runnable{
     private int energyByEat;
     private int numOfGrass;
     private int startingEnergy;
-    //private int animalIsFed;
-
-    //private int lenghtOfGenes;
-    //private int maxMitations;
-    //private int minMutations;
 
 
     private final List<Animal> animals = new ArrayList<Animal>();
@@ -29,7 +25,7 @@ public class SimulationEngine implements IEngine, Runnable{
         return animals;
     }
 
-    public SimulationEngine(int moveDelay, IMap map, int numOfAnimals, int startingEnergy, int energyByEat, int numOfGrass, App app) {
+    public SimulationEngine(int moveDelay, IMap map, int numOfAnimals, int startingEnergy, int energyByEat, int numOfGrass, App app) throws FileNotFoundException {
         this.moveDelay = moveDelay;
         this.map = map;
         this.numOfAnimals = numOfAnimals;
@@ -40,10 +36,10 @@ public class SimulationEngine implements IEngine, Runnable{
         placeAnimals(this.numOfAnimals);
     }
 
-    public void placeAnimals(int amountOfAnimals) {
+    public void placeAnimals(int amountOfAnimals) throws FileNotFoundException {
         int itr = 0;
         while (itr!=amountOfAnimals){
-            Vector potentialPosition = new Vector(getRandomNumber(0,map.getMapWidth()), getRandomNumber(0,map.getMapHeight()));
+            Vector potentialPosition = new Vector(getRandomNumber(0, map.getMapWidth()), getRandomNumber(0,map.getMapHeight()));
             if (!map.isOccupiedByAnimal(potentialPosition)){
                 Animal cuteAnimal = new Animal(map, potentialPosition, startingEnergy, energyByEat);
                 map.place(cuteAnimal);
@@ -72,16 +68,15 @@ public class SimulationEngine implements IEngine, Runnable{
         while (true){
             for (int i = 0; i < animals.size(); i++){
                 Animal animal = animals.get(i);
-                if(animal.getEnergy() < 0){
-                    continue;
-                }
-                animal.move();
-                animal.addObserver(app);
-                map.reachedBoundary(animal);
-                if (animal.getEnergy() < 0){
-                    map.animalsIsDead(animal);
-                    animal.setEnergy(-1);
-                    animal.removeObserver(app);
+                if(animal.getEnergy() > 0){
+                    animal.move();
+                    animal.addObserver(app);
+                    map.reachedBoundary(animal);
+                    if (animal.getEnergy() <= 0){
+                        map.animalsIsDead(animal);
+                        animal.setEnergy(-1);
+                        animal.removeObserver(app);
+                    }
                 }
                 sleepingMachine();
             }
@@ -97,7 +92,11 @@ public class SimulationEngine implements IEngine, Runnable{
                     value.sort(new SortByAge());
                     value.sort(new SortByEnergy());
                     int sizeBeforeRep = value.size();
-                    new Reproduction(value, app).makingChildrens();
+                    try {
+                        new Reproduction(value, app).makingChildrens();
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                     if(sizeBeforeRep < value.size()){
                         int numOfNewAnimals = value.size() - sizeBeforeRep;
                         for(int i = value.size() - 1; i > value.size() - 1 - numOfNewAnimals; i--){
