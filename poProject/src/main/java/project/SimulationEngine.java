@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SimulationEngine implements IEngine, Runnable{
     private App app;
@@ -65,6 +64,7 @@ public class SimulationEngine implements IEngine, Runnable{
 
     @Override
     public void run() {
+        int day = 0;
         while (true){
             for (int i = 0; i < animals.size(); i++){
                 Animal animal = animals.get(i);
@@ -74,12 +74,14 @@ public class SimulationEngine implements IEngine, Runnable{
                     map.reachedBoundary(animal);
                     if (animal.getEnergy() <= 0){
                         map.animalsIsDead(animal);
+                        animal.setDiedAt(day);
                         animal.setEnergy(-1);
                         animal.removeObserver(app);
                     }
                 }
                 sleepingMachine();
             }
+
             map.placeInitGrass(numOfGrass);
             sleepingMachine();
             animals.sort(new SortByChildrens());
@@ -93,7 +95,7 @@ public class SimulationEngine implements IEngine, Runnable{
                     value.sort(new SortByEnergy());
                     int sizeBeforeRep = value.size();
                     try {
-                        new Reproduction(value, app).makingChildrens();
+                        new Reproduction(value, app, map).makingChildrens();
                     } catch (FileNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -107,6 +109,7 @@ public class SimulationEngine implements IEngine, Runnable{
                 }
             });
             sleepingMachine();
+            day+=1;
         }
     }
 }

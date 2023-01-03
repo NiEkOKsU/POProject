@@ -1,16 +1,16 @@
 Szerokość: 10
 Wysokośc: 10
-Początkowa ilość trawy: 60
-numOfAnimlas: 10
+Początkowa ilość trawy: 20
+numOfAnimlas: 12
 startingEnergy: 20
 energyByEat: 8
-numOfGrass: 5
+numOfGrass: 2
 portalEnergy: 10
 Typ mapy: Ziemia
 Długość genotypu: 8
 Maksymalna ilość mutacji: 8
 Minimalna ilość mutacji: 0
 Energia urodzonego dziecka: 10
-Energia potrzebna do poruszenia się: 1
+Energia potrzebna do poruszenia się: 0
 Energia potrzebna do reprodukcji: 15
 Energia potomka: 5

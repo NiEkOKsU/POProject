@@ -103,8 +103,10 @@ public abstract class AbstractWorldMap implements IMap, IPositionChangeObserver{
             }
             else{
                 int i = 0;
-                while(animalsAtPos.get(i).getEnergy() != animal.getEnergy()){
-                    i++;
+                if (animalsAtPos.get(i).getEnergy() != animal.getEnergy()){
+                    while(animalsAtPos.get(i).getEnergy() != animal.getEnergy()){
+                        i++;
+                    }
                 }
                 animalsAtPos.remove(i);
             }

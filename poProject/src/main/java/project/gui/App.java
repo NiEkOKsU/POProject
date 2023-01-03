@@ -1,12 +1,14 @@
 package project.gui;
+
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -33,6 +35,8 @@ public class App extends Application implements IPositionChangeObserver {
     private int energyByEat = 8;
     private int numOfGrass = 2;
     private int portalEnergy = 10;
+    private boolean showAnimal = false;
+    private Animal currentAnimal = new Animal(map, new Vector(0,0), 0, 0);
     private GridPane grid = new GridPane();
     private final VBox userArgs = new VBox(grid);
     private final VBox simStats = new VBox();
@@ -45,6 +49,10 @@ public class App extends Application implements IPositionChangeObserver {
     private Scene SimScene;
 
     private SimulationEngine engine;
+
+    public App() throws FileNotFoundException {
+    }
+
     public void init() {
         try {
             String strCutter = ": ";
@@ -65,7 +73,7 @@ public class App extends Application implements IPositionChangeObserver {
             else{
                 map = new Earth(mapWidth, mapHeight, startingNumOfGrass);
             }
-            engine = new SimulationEngine(500, map, numOfAnimlas, startingEnergy, energyByEat, numOfGrass, this);
+            engine = new SimulationEngine(700, map, numOfAnimlas, startingEnergy, energyByEat, numOfGrass, this);
             lowerLeft = new Vector(0,0);
             upperRight = new Vector(mapWidth,mapHeight);
         }
@@ -79,6 +87,7 @@ public class App extends Application implements IPositionChangeObserver {
         StartSImulationStage = createStageOne();
         SimStage = createStageTwo();
         StartSImulationStage.show();
+
     }
 
     private void ButtonEvent(){
@@ -117,6 +126,7 @@ public class App extends Application implements IPositionChangeObserver {
         makeRows();
         placeObjects();
         placeStats();
+        animalStats();
     }
 
     private void placeStats() {
@@ -145,8 +155,49 @@ public class App extends Application implements IPositionChangeObserver {
         VBox meanAgeOfLife = new VBox(text6);
         meanAgeOfLife.setAlignment(Pos.CENTER);
         grid.add(meanAgeOfLife, 0, upperRight.getX() + 7);
-
     }
+
+    private void animalStats() {
+        if (showAnimal){
+
+            Text text1 = new Text("Genom: " + currentAnimal.getGenes());
+            VBox genom = new VBox(text1);
+            genom.setAlignment(Pos.BASELINE_RIGHT);
+            grid.add(genom, upperRight.getY(), upperRight.getX() + 2);
+
+            Text text2 = new Text("Aktywna czesc genomu: " + currentAnimal.getCurrentGen());
+            VBox currentGen = new VBox(text2);
+            currentGen.setAlignment(Pos.BASELINE_RIGHT);
+            grid.add(currentGen, upperRight.getY(), upperRight.getX() + 3);
+
+            Text text3 = new Text("Ilosc energii: " + currentAnimal.getEnergy());
+            VBox energy = new VBox(text3);
+            energy.setAlignment(Pos.BASELINE_RIGHT);
+            grid.add(energy, upperRight.getY(), upperRight.getX() + 4);
+
+            Text text4 = new Text("Ilosc zjedzonych roslin: " + currentAnimal.getGrassEaten());
+            VBox grassEaten = new VBox(text4);
+            grassEaten.setAlignment(Pos.BASELINE_RIGHT);
+            grid.add(grassEaten, upperRight.getY(), upperRight.getX() + 5);
+
+            Text text5 = new Text("Ilosc dzieci: " + currentAnimal.getChildrens());
+            VBox numOfChildrens = new VBox(text5);
+            numOfChildrens.setAlignment(Pos.BASELINE_RIGHT);
+            grid.add(numOfChildrens, upperRight.getY(), upperRight.getX() + 6);
+
+            Text text6 = new Text("Dlugosc zycia: " + currentAnimal.getAge());
+            VBox age = new VBox(text6);
+            age.setAlignment(Pos.BASELINE_RIGHT);
+            grid.add(age, upperRight.getY(), upperRight.getX() + 7);
+
+            Text text7 = new Text("Smierc: " + currentAnimal.getDiedAt());
+            VBox rip = new VBox(text7);
+            rip.setAlignment(Pos.BASELINE_RIGHT);
+            grid.add(rip, upperRight.getY(), upperRight.getX() + 8);
+        }
+    }
+
+
 
     private void makeTheMap() {
         grid.getColumnConstraints().add(new ColumnConstraints(40));
@@ -186,6 +237,8 @@ public class App extends Application implements IPositionChangeObserver {
         }
     }
 
+
+
     private void placeObjects() throws FileNotFoundException {
         for (int x = 0; x <= upperRight.getX(); x++){
             for (int y = 0; y <= upperRight.getY(); y++){
@@ -193,6 +246,17 @@ public class App extends Application implements IPositionChangeObserver {
                 if (map.objectAt(position) != null) {
                     IMapElement object = map.objectAt(position);
                     VBox vbox = new GuiElementBox(object).getVerticalBox();
+                    EventHandler<MouseEvent> eventHandler = new EventHandler<javafx.scene.input.MouseEvent>() {
+                                @Override
+                                public void handle(javafx.scene.input.MouseEvent e) {
+                                    Animal animal = (Animal) map.objectAt(object.getPosition());
+                                    showAnimal = true;
+                                    currentAnimal = animal;
+                                }
+                            };
+                    if (map.isOccupiedByAnimal(object.getPosition())) {
+                        vbox.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
+                    };
                     grid.add(vbox, position.getX() + 1, upperRight.getY() - position.getY() + 1);
                     GridPane.setHalignment(vbox, HPos.CENTER);
                 }
