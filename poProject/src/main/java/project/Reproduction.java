@@ -9,10 +9,13 @@ import java.util.Scanner;
 
 public class Reproduction {
     protected ArrayList<Animal> animals;
+    private ArrayList<Animal> childrens = new ArrayList<>();
     private App app;
-    public Reproduction(ArrayList<Animal> animals, App app) {
+    private IMap map;
+    public Reproduction(ArrayList<Animal> animals, App app, IMap map) {
         this.animals = animals;
         this.app = app;
+        this.map = map;
     }
 
 
@@ -47,7 +50,8 @@ public class Reproduction {
                 }
                 children.setEnergy(energyToRemove);
                 children.addObserver(app);
-                animals.add(animals.size(), children);
+                children.addObserver((IPositionChangeObserver) map);
+                animals.add(childrens.size(), children);
             }
         }
         return animals;

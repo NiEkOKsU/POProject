@@ -88,6 +88,7 @@ public class SimulationEngine implements IEngine, Runnable{
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+        int day = 0;
         while (true){
             for (int i = 0; i < animals.size(); i++){
                 Animal animal = animals.get(i);
@@ -97,6 +98,7 @@ public class SimulationEngine implements IEngine, Runnable{
                     map.reachedBoundary(animal);
                     if (animal.getEnergy() <= 0){
                         map.animalsIsDead(animal);
+                        animal.setDiedAt(day);
                         animal.setEnergy(-1);
                         animal.removeObserver(app);
                     }
@@ -116,7 +118,7 @@ public class SimulationEngine implements IEngine, Runnable{
                     value.sort(new SortByEnergy());
                     int sizeBeforeRep = value.size();
                     try {
-                        new Reproduction(value, app).makingChildrens();
+                        new Reproduction(value, app, map).makingChildrens();
                     } catch (FileNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -131,7 +133,6 @@ public class SimulationEngine implements IEngine, Runnable{
             });
             sleepingMachine();
             if(writeable){
-                System.out.println("coś");
                 try {
                     writeAnimalsStats();
                 } catch (FileNotFoundException e) {
@@ -139,6 +140,7 @@ public class SimulationEngine implements IEngine, Runnable{
                 }
             }
             sleepingMachine();
+            day+=1;
         }
     }
 }
