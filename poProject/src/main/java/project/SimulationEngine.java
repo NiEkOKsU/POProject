@@ -2,11 +2,10 @@ package project;
 
 import project.gui.App;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class SimulationEngine implements IEngine, Runnable{
     private App app;
@@ -56,15 +55,39 @@ public class SimulationEngine implements IEngine, Runnable{
 
     private void sleepingMachine(){
         try{
-            Thread.sleep(moveDelay);
+            Thread.sleep(1000);
         }
         catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+    private boolean toSave() throws FileNotFoundException {
+        String strCutter = ": ";
+        File plik = new File("src/main/java/project/gui/DaneSymulacji.txt");
+        Scanner odczyt = new Scanner(plik);
+        for(int i = 0; i < 16; i++){
+            odczyt.nextLine();
+        }
+        return Objects.equals(odczyt.nextLine().split(strCutter)[1], "Tak");
+    }
+
+    private void writeAnimalsStats() throws FileNotFoundException {
+        PrintWriter zapis = new PrintWriter("src/main/java/project/gui/StatystykiZwierzat.csv");
+        Stats animStats = new Stats((AbstractWorldMap) map, animals);
+        zapis.println("IloscZwierzat, IloscTrawy, IloscWolnychPol, SredniaEnergiaZyjącychZwierzat, SredniaDlugoscZycia");
+        zapis.println(animStats.getNumOfAnimals() + ", " + animStats.getAmmOfGras() + ", " + animStats.getNumOfFreeScetors() + ", " + animStats.eneregyMean() + ", " + animStats.meanOfAgeDeathAnimals());
+        zapis.close();
+    }
+
     @Override
     public void run() {
+        boolean writeable;
+        try {
+            writeable = toSave();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         while (true){
             for (int i = 0; i < animals.size(); i++){
                 Animal animal = animals.get(i);
@@ -106,6 +129,15 @@ public class SimulationEngine implements IEngine, Runnable{
                     sleepingMachine();
                 }
             });
+            sleepingMachine();
+            if(writeable){
+                System.out.println("coś");
+                try {
+                    writeAnimalsStats();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             sleepingMachine();
         }
     }

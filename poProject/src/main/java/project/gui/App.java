@@ -25,15 +25,15 @@ public class App extends Application implements IPositionChangeObserver {
     private AbstractWorldMap map;
     private Vector lowerLeft;
     private Vector upperRight;
-    private int mapWidth = 10;
-    private int mapHeight = 10;
-    private int startingNumOfGrass = 60;
-    private int numOfAnimlas = 10;
-    private int startingEnergy = 20;
-    private int energyByEat = 8;
-    private int numOfGrass = 2;
-    private int portalEnergy = 10;
-    private GridPane grid = new GridPane();
+    private int mapWidth;
+    private int mapHeight;
+    private int startingNumOfGrass;
+    private int numOfAnimlas;
+    private int startingEnergy;
+    private int energyByEat;
+    private int numOfGrass;
+    private int portalEnergy;
+    private final GridPane grid = new GridPane();
     private final VBox userArgs = new VBox(grid);
     private final VBox simStats = new VBox();
     private Stage StartSImulationStage;
@@ -43,7 +43,8 @@ public class App extends Application implements IPositionChangeObserver {
 
     private Stage SimStage;
     private Scene SimScene;
-
+    private boolean start = true;
+    private Thread engineThread;
     private SimulationEngine engine;
     public void init() {
         try {
@@ -83,7 +84,7 @@ public class App extends Application implements IPositionChangeObserver {
 
     private void ButtonEvent(){
         SimStage.show();
-        Thread engineThread = new Thread(engine);
+        engineThread = new Thread(engine);
         engineThread.start();
     }
 
@@ -100,6 +101,7 @@ public class App extends Application implements IPositionChangeObserver {
 
     private Stage createStageTwo() throws FileNotFoundException {
         restartMap();
+        placeButton();
         SimStage = new Stage(StageStyle.DECORATED);
         SimStage.setTitle("Stage 2");
         SimStage.initOwner(StartSImulationStage);
@@ -117,6 +119,24 @@ public class App extends Application implements IPositionChangeObserver {
         makeRows();
         placeObjects();
         placeStats();
+    }
+
+    private void placeButton() {
+        Button button = new Button("Stop");
+        button.setOnAction(e -> {
+            this.start = !this.start;
+            if(this.start){
+                button.setText("Stop");
+                engineThread.resume();
+            }
+            else{
+                button.setText("Resume");
+                engineThread.suspend();
+            }
+        });
+        VBox vbox = new VBox(button);
+        vbox.setAlignment(Pos.CENTER);
+        userArgs.getChildren().add(button);
     }
 
     private void placeStats() {
@@ -183,6 +203,9 @@ public class App extends Application implements IPositionChangeObserver {
             grid.getColumnConstraints().add(new ColumnConstraints(40));
             GridPane.setHalignment(label, HPos.CENTER);
             grid.add(label, i, 0);
+        }
+        for (int i = upperRight.getY() + 2; i <= upperRight.getY() + 7; i++){
+            grid.getColumnConstraints().add(new ColumnConstraints(80));
         }
     }
 
