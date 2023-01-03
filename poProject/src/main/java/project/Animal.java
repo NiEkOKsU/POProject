@@ -52,9 +52,7 @@ public class Animal implements IMapElement {
         return position;
     }
 
-    public void setPosition(Vector position) {
-        this.position=position;
-    }
+    public void setPosition(Vector position) { this.position=position; }
 
     public MapDirections getDirection() {
         return direction;
