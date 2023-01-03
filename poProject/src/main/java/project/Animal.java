@@ -17,6 +17,8 @@ public class Animal implements IMapElement {
     private int age;
     private int childrens;
     private int currentGen;
+    private int grassEaten = 0;
+    private int diedAt = 0;
     public Animal(IMap map, Vector position, int energy, int energyByEat) throws FileNotFoundException {
         this.direction = MapDirections.NORTH;
         this.position = position;
@@ -73,6 +75,18 @@ public class Animal implements IMapElement {
     public MapDirections getGenOnIdx(int i){
         return this.genes.genes[i];
     }
+    public MapDirections getCurrentGen(){
+        return getGenOnIdx(currentGen);
+    }
+    public int getGrassEaten() {
+        return this.grassEaten;
+    }
+    public int getDiedAt() {
+        return this.diedAt;
+    }
+    public void setDiedAt(int day) {
+        this.diedAt = day;
+    }
 
     public Genotype getGenes() {
         return genes;
@@ -103,6 +117,7 @@ public class Animal implements IMapElement {
         MapDirections newDirection = getGenOnIdx(currentGen);
         Vector newPosition = position;
         if (map.eatGrass(newPosition)){
+            this.grassEaten += 1;
             setEnergy(getEnergy() + energyByEat);
         }
         if (getEnergy() < 0 ){

@@ -1,7 +1,6 @@
 package project.gui;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -20,8 +19,7 @@ public class GuiElementBox {
         image1.setImage(image);
         image1.setFitHeight(SIZE);
         image1.setFitWidth(SIZE);
-        Label label = new Label(element.getPosition().toString());
-        verticalBox = new VBox(image1, label);
+        verticalBox = new VBox(image1);
         verticalBox.setAlignment(Pos.CENTER);
     }
 

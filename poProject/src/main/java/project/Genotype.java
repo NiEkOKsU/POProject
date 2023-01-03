@@ -127,8 +127,6 @@ public class Genotype {
 
     @Override
     public String toString() {
-        return "Genotype{" +
-                "genes=" + Arrays.toString(genes) +
-                '}';
+        return Arrays.toString(genes);
     }
 }
